@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web</title>
+
+    <style>
+        * {
+            margin: 0;
+            box-sizing: border-box;
+            font-family: monospace;
+        }
+
+        html,
+        body {
+            width: 100vw;
+            min-height: 100vh;
+        }
+
+        .root {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+
+        .images {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            max-width: 80%;
+        }
+    </style>
+</head>
+
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/msgpack-lite/dist/msgpack.min.js"></script>
+    <!-- <input class="message" type="text" placeholder="Digite uma mensagem"> -->
+    <div class="root">
+        <h2 class="title">Captura da câmera</h2>
+        <video class="cam" autoplay></video>
+        <div class="images">
+        </div>
+        <button onclick="mandar_imagens()" style="width: 100px;">testar imagens</button>
+    </div>
+
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script>
+        const input = document.querySelector('.message')
+        const p = document.querySelector('.response')
+        const video = document.querySelector("video");
+
+        const iosocket = io('http://10.20.50.26:3333') // Conecta com servidor websocket
+        
+        let lista_imagens = []
+        let lista_resultado = []
+
+        if (navigator.mediaDevices.getUserMedia) { // Conecta web cam do usuário
+            navigator.mediaDevices.getUserMedia({
+                video: true
+            })
+                .then(function (stream) {
+                    const track = stream.getVideoTracks()[0]
+                    const imageCapture = new ImageCapture(track)
+                    video.srcObject = stream; // Adiciona Stream de dados para a tag de video 
+                })
+                .catch(function (error) {
+                    console.log("Something went wrong!");
+                });
+        }
+
+
+        iosocket.on('connect', () => {
+            iosocket.emit("conexao", "pagina de detecçao de face conectada #1")
+            console.log("conectado ao servidor")
+
+            iosocket.on("face_web", (resultado) => {
+                const dados = msgpack.decode(new Uint8Array(resultado));
+                let nome
+                lista_resultado.push(dados)
+                if (dados.nome != 'desconhecido')
+                    nome = dados.nome
+                if (lista_resultado.length < 5) return
+                let n = 0
+                lista_resultado.forEach((dados, indice) => {
+                    if (dados.result == 1){
+                        n++
+                        if (dados.nome == nome)
+                            nome = dados.nome
+                        else
+                            n = -100
+                    }
+                })
+                if (n >= 4)
+                    window.location.href = `/home/?nome=${nome}`
+                else
+                    window.location.href = "/intruso"
+            });
+
+        })
+
+        function mandar_imagens(){
+            lista_imagens = []
+            lista_resultado = []
+            setInterval(sendImage, 100)
+        }
+
+        function sendImage() {
+            if (lista_imagens.length >= 5) return
+            if (!video.srcObject) return
+            console.log("imagem enviada")
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const context = canvas.getContext('2d');
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const buffer = canvas.toDataURL('image/png'); // Transforma imagem em base64
+            lista_imagens.push(buffer)
+            iosocket.emit('face_server', buffer) // Envia imagem depois de uma faixa de tempo
+        }
+    </script>
+</body>
+
+</html>

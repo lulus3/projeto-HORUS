@@ -1,0 +1,41 @@
+{
+  "categories": [
+    {
+      "id": 0,
+      "name": "with_coat"
+    },
+    {
+      "id": 1,
+      "name": "with_glasses"
+    },
+    {
+      "id": 2,
+      "name": "with_glove"
+    },
+    {
+      "id": 3,
+      "name": "with_hat"
+    },
+    {
+      "id": 4,
+      "name": "without_coat"
+    },
+    {
+      "id": 5,
+      "name": "without_glasses"
+    },
+    {
+      "id": 6,
+      "name": "without_glove"
+    },
+    {
+      "id": 7,
+      "name": "without_hat"
+    }
+  ],
+  "info": {
+    "year": 2024,
+    "version": "1.0",
+    "contributor": "Label Studio"
+  }
+}

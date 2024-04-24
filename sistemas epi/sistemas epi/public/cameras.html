@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web</title>
+
+    <style>
+        * {
+            margin: 0;
+            box-sizing: border-box;
+            font-family: monospace;
+        }
+
+        html,
+        body {
+            width: 100vw;
+            min-height: 100vh;
+        }
+
+        .root {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .cam,
+        .image {
+            margin: 0 auto;
+            width: 450px;
+            border: 1px solid black;
+        }
+
+
+        .images {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            max-width: 80%;
+        }
+        button{
+            padding: 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/msgpack-lite/dist/msgpack.min.js"></script>
+    <div class="root">
+        <p class="response"></p>
+        <h2 class="title">Imagens processadas</h2>
+        <table>
+        <tr>
+            <td>
+                <img alt="imagem processada" class="image" id="img1">
+            </td>
+            <td>
+                <img alt="imagem processada" class="image" id="img2">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <img alt="imagem processada" class="image" id="img3">
+            </td>
+            <td>
+                <img alt="imagem processada" class="image" id="img4">
+            </td>
+        </tr>
+        </table>
+        </div>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/apresentar_imagens.js"></script>
+    <script src="/conversor.js"></script>
+    <script src="/sharp/lib/is"></script>
+</body>
+
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+
+        .message-container {
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #38f357;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        button {
+            text-align: center;
+            top: 70%;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #38f357;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333333;
+        }
+    </style>
+    <title>Login Feito</title>
+</head>
+<body>
+    <div class="message-container" id="caixa_mensagem">
+        <!-- Adicione mais elementos HTML ou informações conforme necessário -->
+    </div> <br>
+
+    <button onclick="ir_pras_cameras()">Ir para as cameras</button>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search)
+
+        // Obtém o valor de um parâmetro específico
+        const nome = urlParams.get('nome')
+        let caixa = document.getElementById("caixa_mensagem")
+        if (nome)
+            caixa.innerHTML = `<h1>Login Feito, Bemvindo ${nome}</h1>`
+        else
+            caixa.innerHTML = `<h1>Login Feito, Bemvindo</h1>`
+        
+        function ir_pras_cameras(){
+            window.location.href = '/cameras'
+        }
+    </script>
+</body>
+</html>
